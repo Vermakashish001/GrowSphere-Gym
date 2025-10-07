@@ -1,0 +1,153 @@
+// This is your Prisma schema file.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Gym {
+  id          String         @id @default(cuid())
+  name        String
+  users       User[]
+  members     Member[]
+  classes     Class[]
+  instructors Instructor[]
+  payments    Payment[]
+  plans       MembershipPlan[] // ADD THIS RELATION
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ADD THIS ENTIRE MODEL
+model MembershipPlan {
+  id      String   @id @default(cuid())
+  name    String
+  price   Decimal
+  
+  gym     Gym    @relation(fields: [gymId], references: [id])
+  gymId   String
+
+  members Member[]
+}
+
+model Member {
+  id        String    @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  status    String    @default("active")
+  
+  gym       Gym    @relation(fields: [gymId], references: [id])
+  gymId     String
+
+  // ADD THESE TWO LINES TO LINK TO A PLAN
+  plan      MembershipPlan @relation(fields: [planId], references: [id])
+  planId    String
+  
+  payments  Payment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([email, gymId])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  amount    Decimal
+  status    String
+  channel   String
+  notes     String?
+  member    Member   @relation(fields: [memberId], references: [id])
+  memberId  String
+  gym       Gym      @relation(fields: [gymId], references: [id])
+  gymId     String
+  createdAt DateTime @default(now())
+}
+
+model Instructor {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  image     String?
+  gym       Gym      @relation(fields: [gymId], references: [id])
+  gymId     String
+  classes   Class[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email, gymId])
+}
+
+model Class {
+  id           String     @id @default(cuid())
+  name         String
+  description  String?
+  startTime    DateTime
+  endTime      DateTime
+  capacity     Int        @default(20)
+  gym          Gym        @relation(fields: [gymId], references: [id])
+  gymId        String
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+  instructorId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+// User, Account, Session, and VerificationToken models remain the same
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  firstName     String
+  lastName      String
+  gym           Gym       @relation(fields: [gymId], references: [id])
+  gymId         String
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

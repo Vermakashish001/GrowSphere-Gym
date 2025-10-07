@@ -1,0 +1,114 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@theme {
+  /* Font Family */
+  --font-family-sans: 'DM Sans', sans-serif;
+
+  /* Dark Theme Colors (Default) */
+  --color-background: #0b1220;
+  --color-foreground: #ffffff;
+  --color-border: #1e2a38;
+  --color-input: #0f1724;
+  --color-ring: #2ea4ff;
+
+  /* Primary Colors */
+  --color-primary: #2ea4ff;
+  --color-primary-foreground: #05202f;
+
+  /* Secondary Colors */
+  --color-secondary: #11202b;
+  --color-secondary-foreground: #b9c7d6;
+
+  /* Muted Colors */
+  --color-muted: #0b1015;
+  --color-muted-foreground: #8a98a6;
+
+  /* Accent Colors */
+  --color-accent: #4db6ff;
+  --color-accent-foreground: #041622;
+
+  /* Destructive Colors */
+  --color-destructive: #ff6b6b;
+  --color-destructive-foreground: #2b0a0a;
+
+  /* Success Colors */
+  --color-success: #2ecc71;
+  --color-success-foreground: #072213;
+
+  /* Warning Colors */
+  --color-warning: #ffc857;
+  --color-warning-foreground: #2e1f00;
+
+  /* Card Colors */
+  --color-card: #0f1724;
+  --color-card-foreground: #e6f0f6;
+
+  /* Sidebar Colors */
+  --color-sidebar: #071016;
+  --color-sidebar-foreground: #9fb7c9;
+  --color-sidebar-primary: #122733;
+  --color-sidebar-primary-foreground: #dff6ff;
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius: 0.75rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.5rem;
+}
+
+/* Light Theme */
+.light {
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-border: #e2e8f0;
+  --color-input: #f8fafc;
+  --color-ring: #2ea4ff;
+
+  --color-primary: #2ea4ff;
+  --color-primary-foreground: #ffffff;
+
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
+
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+
+  --color-accent: #4db6ff;
+  --color-accent-foreground: #ffffff;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-success: #10b981;
+  --color-success-foreground: #ffffff;
+
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #ffffff;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+
+  --color-sidebar: #f8fafc;
+  --color-sidebar-foreground: #475569;
+  --color-sidebar-primary: #e2e8f0;
+  --color-sidebar-primary-foreground: #0f172a;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-family-sans);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
