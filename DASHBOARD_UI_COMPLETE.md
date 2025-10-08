@@ -43,19 +43,6 @@ colors: {
 <div style={{ backgroundColor: "#0F1724" }}>
 ```
 
----
-
-## 📁 Components Created
-
-```
-src/components/dashboard/
-├── DashboardHeader.tsx      // Header with search & action buttons
-├── StatCard.tsx             // Reusable stat cards with icons
-├── MemberGrowthChart.tsx    // Bar chart (12 months)
-├── WeeklyCalendar.tsx       // Week view with current day
-├── WeeklySchedule.tsx       // This week's classes
-└── UpcomingClasses.tsx      // Future classes with avatars
-```
 
 ---
 
