@@ -161,9 +161,9 @@ The GrowSphere Team
               <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
                 <tr>
                   <td style="border-radius: 8px; background: linear-gradient(135deg, #2ea4ff 0%, #1e90ff 100%); box-shadow: 0 4px 12px rgba(46, 164, 255, 0.3);">
-                    <a href="${resetUrl}" target="_blank" style="display: inline-block; padding: 16px 40px; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 8px;">
+                    <button style="display: inline-block; padding: 16px 40px; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 8px;">
                       Reset Password →
-                    </a>
+                    </button>
                   </td>
                 </tr>
               </table>
