@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { Gym, User, Instructor } from "@prisma/client";
 import Image from "next/image";
-import { Mail, CreditCard, MessageSquare } from "lucide-react";
+import { Mail, CreditCard, MessageSquare, Settings as SettingsIcon } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import InstructorForm from "./InstructorForm";
+import PageHeader from "@/components/dashboard/PageHeader";
 
 type GymWithUsers = Gym & {
   users: Pick<User, "id" | "firstName" | "lastName" | "email" | "image">[];
@@ -104,18 +105,16 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="md:ml-14 lg:ml-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Settings</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Manage workspace, billing, users, and preferences
-          </p>
-        </div>
-        <button className="w-full sm:w-auto px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors shadow-lg shadow-primary/20">
-          Save Changes
-        </button>
-      </div>
+      <PageHeader
+        icon={SettingsIcon}
+        title="Settings"
+        description="Manage workspace, billing, users, and preferences"
+        action={
+          <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors shadow-lg shadow-primary/20">
+            Save Changes
+          </button>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 sm:gap-2 border-b border-border overflow-x-auto">
@@ -143,7 +142,8 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
           {/* Left Column */}
           <div className="space-y-6">
             {/* Workspace Settings */}
-            <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+            <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">Workspace</h3>
             <div className="space-y-4">
               <div>
                 <label htmlFor="workspaceName" className="text-xs text-muted-foreground mb-1 block">
@@ -254,8 +254,8 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
           </div>
 
           {/* Policies */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-foreground mb-4">Policies</h3>
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">Policies</h3>
             <div className="space-y-4">
               <div>
                 <label htmlFor="cancellationWindow" className="text-xs text-muted-foreground mb-1 block">
@@ -322,9 +322,9 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
           </div>
 
           {/* Integrations */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-foreground">Integrations</h3>
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">Integrations</h3>
               <div className="flex gap-2">
                 <button className="px-3 py-1 bg-primary text-primary-foreground rounded-lg text-xs font-medium">
                   All
@@ -398,8 +398,8 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
         {/* Right Column */}
         <div className="space-y-6">
           {/* Theme & Preferences */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-foreground mb-4">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">
               Theme & Preferences
             </h3>
             <div className="space-y-4">
@@ -458,9 +458,9 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
           </div>
 
           {/* Users & Roles */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-foreground">Users & Roles</h3>
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">Users & Roles</h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => setUserFilter("all")}
@@ -538,8 +538,8 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
           </div>
 
           {/* Danger Zone */}
-          <div className="bg-card border border-red-500/50 rounded-2xl p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-foreground mb-4">Danger Zone</h3>
+          <div className="bg-card border border-red-500/50 rounded-2xl p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">Danger Zone</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-background rounded-lg">
                 <div>
@@ -565,11 +565,11 @@ export default function SettingsView({ gym, instructors, currentUser }: Settings
       {/* Instructors Tab */}
       {activeTab === "instructors" && (
             <div className="space-y-6">
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-foreground mb-4">
+              <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">
                   Team Instructors
                 </h3>
-                <p className="text-sm text-muted-foreground mb-6">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-6">
                   Manage your gym instructors who can lead classes
                 </p>
 

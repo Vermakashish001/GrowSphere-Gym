@@ -13,6 +13,7 @@ import {
   Calendar,
   FileText,
 } from "lucide-react";
+import PageHeader from "@/components/dashboard/PageHeader";
 
 // Serialized Payment type with Decimal as string
 type SerializedPayment = Omit<Payment, 'amount'> & {
@@ -66,13 +67,13 @@ export default function BillingView({
   };
 
   const formatAmount = (amount: any) => {
-    return `$${parseFloat(amount.toString()).toFixed(2)}`;
+    return `₹${parseFloat(amount.toString()).toFixed(2)}`;
   };
 
   // Mock data for demonstration
   const currentPlan = {
     name: "Pro",
-    price: "$49/mo",
+    price: "₹49/mo",
     nextInvoiceDate: "Nov 28, 2025",
   };
 
@@ -119,26 +120,21 @@ export default function BillingView({
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="md:ml-14 lg:ml-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Billing</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Manage subscription, invoices, and payment methods
-          </p>
-        </div>
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <button className="hidden sm:inline-flex px-3 sm:px-4 py-2 bg-secondary/50 hover:bg-secondary rounded-lg text-xs sm:text-sm font-medium transition-colors">
-            Update Payment
-          </button>
-          <button className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs sm:text-sm font-medium transition-colors">
-            Upgrade Plan
-          </button>
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
-            {getInitials(currentUser.firstName, currentUser.lastName)}
+      <PageHeader
+        icon={CreditCard}
+        title="Billing"
+        description="Manage subscription, invoices, and payment methods"
+        action={
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg font-medium transition-colors">
+              Update Payment
+            </button>
+            <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors shadow-lg shadow-primary/20">
+              Upgrade Plan
+            </button>
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 sm:gap-2 border-b border-border overflow-x-auto">
@@ -205,15 +201,15 @@ export default function BillingView({
             {/* Left Column - Invoices & Billing Details */}
             <div className="lg:col-span-2 space-y-6">
               {/* Invoices */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-foreground">
+              <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground">
                     Invoices
                   </h3>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setInvoiceFilter("all")}
-                      className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                      className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap ${
                         invoiceFilter === "all"
                           ? "bg-primary text-primary-foreground"
                           : "bg-secondary/50 text-muted-foreground"
@@ -223,7 +219,7 @@ export default function BillingView({
                     </button>
                     <button
                       onClick={() => setInvoiceFilter("paid")}
-                      className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                      className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap ${
                         invoiceFilter === "paid"
                           ? "bg-primary text-primary-foreground"
                           : "bg-secondary/50 text-muted-foreground"
@@ -233,7 +229,7 @@ export default function BillingView({
                     </button>
                     <button
                       onClick={() => setInvoiceFilter("open")}
-                      className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                      className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap ${
                         invoiceFilter === "open"
                           ? "bg-primary text-primary-foreground"
                           : "bg-secondary/50 text-muted-foreground"
@@ -244,20 +240,20 @@ export default function BillingView({
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full">
+                <div className="overflow-x-auto -mx-4 sm:mx-0">
+                  <table className="w-full min-w-[500px]">
                     <thead className="border-b border-border">
                       <tr>
-                        <th className="text-left text-xs font-medium text-muted-foreground py-3 px-2">
+                        <th className="text-left text-xs font-medium text-muted-foreground py-3 px-4">
                           Invoice
                         </th>
-                        <th className="text-left text-xs font-medium text-muted-foreground py-3 px-2">
+                        <th className="text-left text-xs font-medium text-muted-foreground py-3 px-4">
                           Date
                         </th>
-                        <th className="text-left text-xs font-medium text-muted-foreground py-3 px-2">
+                        <th className="text-left text-xs font-medium text-muted-foreground py-3 px-4">
                           Status
                         </th>
-                        <th className="text-right text-xs font-medium text-muted-foreground py-3 px-2">
+                        <th className="text-right text-xs font-medium text-muted-foreground py-3 px-4">
                           Amount
                         </th>
                       </tr>
@@ -268,15 +264,15 @@ export default function BillingView({
                           key={payment.id}
                           className="border-b border-border last:border-0"
                         >
-                          <td className="py-3 px-2 text-sm text-foreground">
+                          <td className="py-3 px-4 text-xs sm:text-sm text-foreground">
                             #INV-{payment.id.slice(0, 4).toUpperCase()}
                           </td>
-                          <td className="py-3 px-2 text-sm text-foreground">
+                          <td className="py-3 px-4 text-xs sm:text-sm text-foreground">
                             {formatDate(payment.createdAt)}
                           </td>
-                          <td className="py-3 px-2">
+                          <td className="py-3 px-4">
                             <span
-                              className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
+                              className={`inline-flex px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold ${
                                 payment.status.toLowerCase() === "paid"
                                   ? "bg-green-500/20 text-green-500"
                                   : "bg-yellow-500/20 text-yellow-500"
@@ -286,7 +282,7 @@ export default function BillingView({
                                 payment.status.slice(1)}
                             </span>
                           </td>
-                          <td className="py-3 px-2 text-sm text-foreground text-right font-medium">
+                          <td className="py-3 px-4 text-xs sm:text-sm text-foreground text-right font-medium">
                             {formatAmount(payment.amount)}
                           </td>
                         </tr>
@@ -297,12 +293,12 @@ export default function BillingView({
               </div>
 
               {/* Billing Details */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-foreground mb-4">
+              <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">
                   Billing Details
                 </h3>
 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <p className="text-xs text-muted-foreground mb-2">
                       Billing Email
@@ -374,7 +370,7 @@ export default function BillingView({
                       </p>
                     </div>
                     <p className="text-sm font-medium text-foreground">
-                      $0.00
+                      ₹0.00
                     </p>
                   </div>
                   <div className="flex items-center justify-between mt-3">
@@ -383,7 +379,7 @@ export default function BillingView({
                         Estimated Next Charge
                       </p>
                     </div>
-                    <p className="text-lg font-bold text-foreground">$49.00</p>
+                    <p className="text-lg font-bold text-foreground">₹49.00</p>
                   </div>
                 </div>
               </div>
@@ -392,9 +388,9 @@ export default function BillingView({
             {/* Right Column - Payment Methods & Usage */}
             <div className="space-y-6">
               {/* Payment Methods */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-foreground">
+              <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground">
                     Payment Methods
                   </h3>
                   <div className="flex gap-2">
@@ -456,12 +452,12 @@ export default function BillingView({
               </div>
 
               {/* Usage Summary */}
-              <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-foreground mb-4">
+              <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">
                   Usage Summary
                 </h3>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">
                       Active Members

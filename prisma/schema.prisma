@@ -25,16 +25,21 @@ model Gym {
   updatedAt DateTime @updatedAt
 }
 
-// ADD THIS ENTIRE MODEL
 model MembershipPlan {
-  id      String   @id @default(cuid())
-  name    String
-  price   Decimal
+  id           String   @id @default(cuid())
+  name         String
+  price        Decimal
+  duration     Int?     // e.g., 1, 3, 6, 12
+  durationUnit String?  // "days", "months", "years"
+  description  String?  @db.Text
   
-  gym     Gym    @relation(fields: [gymId], references: [id])
-  gymId   String
+  gym          Gym      @relation(fields: [gymId], references: [id], onDelete: Cascade)
+  gymId        String
 
-  members Member[]
+  members      Member[]
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Member {

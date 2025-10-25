@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Member, MembershipPlan } from "@prisma/client";
+import Link from "next/link";
 
 // Serialized version of MembershipPlan with Decimal as string
 export type SerializedMembershipPlan = Omit<MembershipPlan, 'price'> & {
@@ -122,12 +123,12 @@ export const columns: ColumnDef<MemberWithPlan>[] = [
     header: "Actions",
     cell: ({ row }) => {
       return (
-        <a
+        <Link
           href={`/dashboard/members/${row.original.id}`}
           className="px-4 py-1.5 text-sm font-medium text-foreground hover:bg-secondary/50 rounded-md transition-colors inline-block"
         >
           View
-        </a>
+        </Link>
       );
     },
   },

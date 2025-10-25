@@ -558,7 +558,7 @@ export default function MemberDetailView({
                         </div>
                         <div>
                           <p className="text-sm font-medium text-foreground">
-                            ${parseFloat(payment.amount).toFixed(2)}
+                            ₹{parseFloat(payment.amount).toFixed(2)}
                           </p>
                           <p className="text-xs text-muted-foreground">
                             {formatDate(payment.createdAt)} • {payment.channel}

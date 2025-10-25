@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { updateClass, deleteClass } from "@/lib/actions";
+import PageHeader from "@/components/dashboard/PageHeader";
 
 type ClassWithInstructor = Class & {
   instructor: Instructor;
@@ -202,33 +203,31 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="md:ml-14 lg:ml-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Classes</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Manage your class schedule and instructors
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              placeholder="Search classes..."
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
-            />
+      <PageHeader
+        icon={Calendar}
+        title="Classes"
+        description="Manage your class schedule and instructors"
+        action={
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                placeholder="Search classes..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="pl-10 pr-4 py-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
+              />
+            </div>
+            <Link
+              href="/dashboard/classes/new"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors shadow-lg shadow-primary/20"
+            >
+              <Plus className="h-5 w-5" />
+              <span className="hidden sm:inline">New Class</span>
+            </Link>
           </div>
-          <Link
-            href="/dashboard/classes/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors shadow-lg shadow-primary/20"
-          >
-            <Plus className="h-4 w-4" />
-            New Class
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Filters and View Toggle */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
@@ -570,22 +569,22 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
 
       {/* Edit Class Modal */}
       {isEditModalOpen && editingClass && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-card border border-border rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-foreground">Edit Class</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">Edit Class</h2>
               <button
                 onClick={() => setIsEditModalOpen(false)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors p-2"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleUpdate} className="space-y-4">
+            <form onSubmit={handleUpdate} className="space-y-3 sm:space-y-4">
               {/* Class Name */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-foreground mb-2">
                   Class Name *
                 </label>
                 <input
@@ -593,27 +592,27 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
                   name="name"
                   defaultValue={editingClass.name}
                   required
-                  className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-border rounded-lg text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-foreground mb-2">
                   Description
                 </label>
                 <textarea
                   name="description"
                   defaultValue={editingClass.description || ""}
                   rows={3}
-                  className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-border rounded-lg text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {/* Start Time */}
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-2">
                     Start Time *
                   </label>
                   <input
@@ -621,13 +620,13 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
                     name="startTime"
                     defaultValue={new Date(editingClass.startTime).toISOString().slice(0, 16)}
                     required
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-border rounded-lg text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
 
                 {/* End Time */}
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-2">
                     End Time *
                   </label>
                   <input
@@ -635,15 +634,15 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
                     name="endTime"
                     defaultValue={new Date(editingClass.endTime).toISOString().slice(0, 16)}
                     required
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-border rounded-lg text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {/* Capacity */}
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-2">
                     Capacity
                   </label>
                   <input
@@ -651,13 +650,13 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
                     name="capacity"
                     defaultValue={editingClass.capacity}
                     min="1"
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-border rounded-lg text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
 
                 {/* Instructor */}
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-foreground mb-2">
                     Instructor *
                   </label>
                   <select
@@ -665,7 +664,7 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
                     name="instructorId"
                     defaultValue={editingClass.instructorId}
                     required
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-border rounded-lg text-sm sm:text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     {instructors.map((instructor) => (
                       <option key={instructor.id} value={instructor.id}>
@@ -677,17 +676,17 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="flex-1 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg text-sm font-medium transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg text-sm font-medium transition-colors order-2 sm:order-1"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors order-1 sm:order-2"
                 >
                   Update Class
                 </button>

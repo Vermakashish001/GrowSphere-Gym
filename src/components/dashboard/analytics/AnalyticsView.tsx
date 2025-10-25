@@ -10,7 +10,9 @@ import {
   FileDown,
   FileText,
   TrendingUp,
+  BarChart3,
 } from "lucide-react";
+import PageHeader from "@/components/dashboard/PageHeader";
 
 type ClassWithInstructor = Class & {
   instructor: Instructor;
@@ -92,54 +94,49 @@ export default function AnalyticsView({
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="md:ml-14 lg:ml-0">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Analytics</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Key metrics across members, classes, and revenue
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              placeholder="Search reports..."
-              className="pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64"
-            />
+      <PageHeader
+        icon={BarChart3}
+        title="Analytics"
+        description="Key metrics across members, classes, and revenue"
+        action={
+          <div className="flex items-center gap-3">
+            <div className="relative hidden md:block">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                placeholder="Search reports..."
+                className="pl-10 pr-4 py-2 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-48 lg:w-64"
+              />
+            </div>
+            <button className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg font-medium transition-colors">
+              <FileDown className="h-4 w-4" />
+              Export CSV
+            </button>
+            <button className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors shadow-lg shadow-primary/20">
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Create Report</span>
+            </button>
           </div>
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/50 hover:bg-secondary rounded-lg text-sm font-medium transition-colors">
-            <FileDown className="h-4 w-4" />
-            Export CSV
-          </button>
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors">
-            <FileText className="h-4 w-4" />
-            Create Report
-          </button>
-          <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-semibold">
-            {getInitials(currentUser.firstName, currentUser.lastName)}
-          </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Overview Section with Time Filters */}
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-foreground">Overview</h2>
-          <div className="flex gap-2">
+      <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
+          <h2 className="text-base sm:text-lg font-semibold text-foreground">Overview</h2>
+          <div className="flex gap-2 overflow-x-auto w-full sm:w-auto">
             <button
               onClick={() => setTimeFilter("30days")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 timeFilter === "30days"
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
               }`}
             >
-              Last 30 days
+              Last 30d
             </button>
             <button
               onClick={() => setTimeFilter("quarter")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 timeFilter === "quarter"
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -149,7 +146,7 @@ export default function AnalyticsView({
             </button>
             <button
               onClick={() => setTimeFilter("year")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 timeFilter === "year"
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -161,47 +158,47 @@ export default function AnalyticsView({
         </div>
 
         {/* Key Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-background rounded-lg p-6 border border-border">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="bg-background rounded-lg p-4 sm:p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">
                   Active Members
                 </p>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">
                   {memberCount.toLocaleString()}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <Users className="h-6 w-6 text-blue-500" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
               </div>
             </div>
           </div>
 
-          <div className="bg-background rounded-lg p-6 border border-border">
+          <div className="bg-background rounded-lg p-4 sm:p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">MRR</p>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">MRR</p>
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">
                   ${mrr.toLocaleString()}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-green-500" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
+                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
               </div>
             </div>
           </div>
 
-          <div className="bg-background rounded-lg p-6 border border-border">
+          <div className="bg-background rounded-lg p-4 sm:p-6 border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Churn</p>
-                <p className="text-3xl font-bold text-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1">Churn</p>
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">
                   {churnRate}%
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center">
-                <TrendingDown className="h-6 w-6 text-red-500" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
+                <TrendingDown className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" />
               </div>
             </div>
           </div>
@@ -213,15 +210,15 @@ export default function AnalyticsView({
         {/* Left Column */}
         <div className="lg:col-span-2 space-y-6">
           {/* Member Growth */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 Member Growth
               </h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => setMemberGrowthFilter("monthly")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     memberGrowthFilter === "monthly"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -231,7 +228,7 @@ export default function AnalyticsView({
                 </button>
                 <button
                   onClick={() => setMemberGrowthFilter("weekly")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     memberGrowthFilter === "weekly"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -241,21 +238,21 @@ export default function AnalyticsView({
                 </button>
               </div>
             </div>
-            <div className="h-64 flex items-center justify-center bg-background rounded-lg border border-border">
-              <p className="text-muted-foreground">Bar chart placeholder</p>
+            <div className="h-48 sm:h-64 flex items-center justify-center bg-background rounded-lg border border-border">
+              <p className="text-xs sm:text-sm text-muted-foreground">Bar chart placeholder</p>
             </div>
           </div>
 
           {/* Class Attendance */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 Class Attendance
               </h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => setAttendanceFilter("category")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     attendanceFilter === "category"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -265,7 +262,7 @@ export default function AnalyticsView({
                 </button>
                 <button
                   onClick={() => setAttendanceFilter("coach")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     attendanceFilter === "coach"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -275,23 +272,23 @@ export default function AnalyticsView({
                 </button>
               </div>
             </div>
-            <div className="h-64 flex items-center justify-center bg-background rounded-lg border border-border">
-              <p className="text-muted-foreground">
+            <div className="h-48 sm:h-64 flex items-center justify-center bg-background rounded-lg border border-border">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Stacked bars placeholder
               </p>
             </div>
           </div>
 
           {/* Revenue Breakdown */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 Revenue Breakdown
               </h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => setRevenueFilter("plans")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     revenueFilter === "plans"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -301,7 +298,7 @@ export default function AnalyticsView({
                 </button>
                 <button
                   onClick={() => setRevenueFilter("addons")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     revenueFilter === "addons"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -311,8 +308,8 @@ export default function AnalyticsView({
                 </button>
               </div>
             </div>
-            <div className="h-64 flex items-center justify-center bg-background rounded-lg border border-border">
-              <p className="text-muted-foreground">Donut chart placeholder</p>
+            <div className="h-48 sm:h-64 flex items-center justify-center bg-background rounded-lg border border-border">
+              <p className="text-xs sm:text-sm text-muted-foreground">Donut chart placeholder</p>
             </div>
           </div>
         </div>
@@ -320,23 +317,23 @@ export default function AnalyticsView({
         {/* Right Column */}
         <div className="space-y-6">
           {/* Top Performing Classes */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 Top Performing Classes
               </h3>
               <div className="flex gap-2">
-                <button className="px-3 py-1 rounded-lg text-xs font-medium bg-primary text-primary-foreground">
+                <button className="px-3 py-1 rounded-lg text-xs font-medium bg-primary text-primary-foreground whitespace-nowrap">
                   Last 30d
                 </button>
-                <button className="px-3 py-1 rounded-lg text-xs font-medium bg-secondary/50 text-muted-foreground hover:bg-secondary">
+                <button className="px-3 py-1 rounded-lg text-xs font-medium bg-secondary/50 text-muted-foreground hover:bg-secondary whitespace-nowrap">
                   90d
                 </button>
               </div>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+              <table className="w-full min-w-[400px]">
                 <thead className="border-b border-border">
                   <tr>
                     <th className="text-left text-xs font-medium text-muted-foreground py-2 px-2">
@@ -387,15 +384,15 @@ export default function AnalyticsView({
           </div>
 
           {/* New vs Returning */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 New vs Returning
               </h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => setRetentionFilter("weekly")}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                  className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap ${
                     retentionFilter === "weekly"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -405,7 +402,7 @@ export default function AnalyticsView({
                 </button>
                 <button
                   onClick={() => setRetentionFilter("monthly")}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                  className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap ${
                     retentionFilter === "monthly"
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
@@ -415,23 +412,23 @@ export default function AnalyticsView({
                 </button>
               </div>
             </div>
-            <div className="h-64 flex items-center justify-center bg-background rounded-lg border border-border">
-              <p className="text-muted-foreground">Area chart placeholder</p>
+            <div className="h-48 sm:h-64 flex items-center justify-center bg-background rounded-lg border border-border">
+              <p className="text-xs sm:text-sm text-muted-foreground">Area chart placeholder</p>
             </div>
           </div>
 
           {/* Cohort Retention */}
-          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-foreground">
+          <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-foreground">
                 Cohort Retention
               </h3>
-              <button className="px-3 py-1 rounded-lg text-xs font-medium bg-primary text-primary-foreground">
+              <button className="px-3 py-1 rounded-lg text-xs font-medium bg-primary text-primary-foreground whitespace-nowrap">
                 90 days
               </button>
             </div>
-            <div className="h-64 flex items-center justify-center bg-background rounded-lg border border-border">
-              <p className="text-muted-foreground">Heatmap placeholder</p>
+            <div className="h-48 sm:h-64 flex items-center justify-center bg-background rounded-lg border border-border">
+              <p className="text-xs sm:text-sm text-muted-foreground">Heatmap placeholder</p>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import UserProfile from './UserProfile';
+import { LayoutDashboard } from "lucide-react";
 
 interface DashboardHeaderProps {
   session: any; // Pass the whole session object for the profile
@@ -19,12 +20,17 @@ export default function DashboardHeader({ session }: DashboardHeaderProps) {
 
   return (
     <header className="flex items-center justify-between h-auto lg:h-[89px] py-4 lg:py-0">
-      {/* Left Side: Title & Subtitle */}
-      <div className="md:ml-16 lg:ml-0">
-        <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">
-          Overview of your gym performance and schedules
-        </p>
+      {/* Left Side: Icon + Title & Subtitle */}
+      <div className="flex items-center gap-3 md:ml-16 lg:ml-0">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+          <LayoutDashboard className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            Overview of your gym performance and schedules
+          </p>
+        </div>
       </div>
 
       {/* Right Side: Search, Actions, and Profile */}
@@ -55,15 +61,14 @@ export default function DashboardHeader({ session }: DashboardHeaderProps) {
         {/* Action Buttons */}
         <Link
           href="/dashboard/classes/new"
-          className="hidden sm:flex px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium bg-secondary/50 hover:bg-secondary text-foreground transition-colors"
+          className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg font-medium transition-colors"
         >
-          <span className="hidden lg:inline">New Class</span>
-          <span className="lg:hidden">+ Class</span>
+          New Class
         </Link>
 
         <Link
           href="/dashboard/members/new"
-          className="px-3 lg:px-4 py-2 rounded-lg text-xs lg:text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors shadow-lg shadow-primary/20"
         >
           <span className="hidden sm:inline">Add Member</span>
           <span className="sm:hidden">+</span>

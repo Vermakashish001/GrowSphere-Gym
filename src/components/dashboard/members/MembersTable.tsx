@@ -10,7 +10,7 @@ import {
   SortingState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { MemberWithPlan } from "./columns";
 
@@ -26,11 +26,11 @@ export function MembersTable({ columns, data }: DataTableProps) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
 
-  // Filter data based on status
-  const filteredData = data.filter((member) => {
-    if (statusFilter === "all") return true;
-    return member.status.toLowerCase() === statusFilter;
-  });
+  // Filter data based on status - memoized to prevent unnecessary recalculations
+  const filteredData = useMemo(() => {
+    if (statusFilter === "all") return data;
+    return data.filter((member) => member.status.toLowerCase() === statusFilter);
+  }, [data, statusFilter]);
 
   const table = useReactTable({
     data: filteredData,
@@ -63,6 +63,7 @@ export function MembersTable({ columns, data }: DataTableProps) {
           {statusTabs.map((tab) => (
             <button
               key={tab.value}
+              type="button"
               onClick={() => setStatusFilter(tab.value)}
               className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 statusFilter === tab.value
@@ -89,11 +90,11 @@ export function MembersTable({ columns, data }: DataTableProps) {
 
       {/* Action Buttons */}
       <div className="px-4 sm:px-6 py-3 border-b border-border flex justify-end gap-2">
-        <button className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-secondary/50 hover:bg-secondary rounded-lg text-xs sm:text-sm font-medium transition-colors">
+        <button type="button" className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-secondary/50 hover:bg-secondary rounded-lg text-xs sm:text-sm font-medium transition-colors">
           <ArrowUpDown className="h-4 w-4" />
           <span className="hidden sm:inline">Sort</span>
         </button>
-        <button className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-secondary/50 hover:bg-secondary rounded-lg text-xs sm:text-sm font-medium transition-colors">
+        <button type="button" className="flex items-center gap-2 px-2 sm:px-3 py-1.5 bg-secondary/50 hover:bg-secondary rounded-lg text-xs sm:text-sm font-medium transition-colors">
           <SlidersHorizontal className="h-4 w-4" />
           <span className="hidden sm:inline">Filters</span>
         </button>
@@ -174,14 +175,16 @@ export function MembersTable({ columns, data }: DataTableProps) {
         </div>
         <div className="flex gap-2">
           <button
-            className="px-4 py-2 bg-secondary/50 hover:bg-secondary rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            type="button"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </button>
           <button
-            className="px-4 py-2 bg-secondary/50 hover:bg-secondary rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            type="button"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary/50 hover:bg-secondary rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

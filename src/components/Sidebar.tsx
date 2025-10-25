@@ -18,6 +18,7 @@ import {
   HelpCircle,
   X,
   UserCircle,
+  Tag,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -30,6 +31,7 @@ interface SidebarProps {
 const navigation: { name: string; href: string; icon: LucideIcon; active: boolean }[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, active: false },
   { name: "Members", href: "/dashboard/members", icon: Users, active: false },
+  { name: "Plans", href: "/dashboard/plans", icon: Tag, active: false },
   { name: "Classes", href: "/dashboard/classes", icon: Calendar, active: false },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard, active: false },
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart2, active: false },
