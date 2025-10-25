@@ -8,11 +8,11 @@ export default function MemberGrowthChart({ data }: MemberGrowthChartProps) {
   const maxCount = Math.max(...data.map((d) => d.count));
 
   return (
-    <div className="rounded-2xl p-6 border border-border bg-card shadow-sm">
+    <div className="rounded-2xl p-4 sm:p-6 border border-border bg-card shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6 sm:mb-8">
         <div>
-          <h3 className="text-lg font-bold mb-1 text-foreground">
+          <h3 className="text-base sm:text-lg font-bold mb-1 text-foreground">
             Member Growth
           </h3>
           <p className="text-xs text-muted-foreground">
@@ -28,7 +28,7 @@ export default function MemberGrowthChart({ data }: MemberGrowthChartProps) {
       </div>
 
       {/* Chart */}
-      <div className="flex items-end justify-between gap-2 h-56">
+      <div className="flex items-end justify-between gap-1 sm:gap-2 h-40 sm:h-56">
         {data.map((item, index) => {
           const heightPercent = (item.count / maxCount) * 100;
           return (
@@ -43,7 +43,7 @@ export default function MemberGrowthChart({ data }: MemberGrowthChartProps) {
                 title={`${item.month}: ${item.count} members`}
               />
               {/* Month Label */}
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[10px] sm:text-xs text-muted-foreground">
                 {item.month}
               </span>
             </div>

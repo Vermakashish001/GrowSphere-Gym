@@ -12,6 +12,8 @@ datasource db {
 model Gym {
   id          String         @id @default(cuid())
   name        String
+  logo        String?        // ImageKit URL
+  logoFileId  String?        // ImageKit file ID for deletion
   users       User[]
   members     Member[]
   classes     Class[]
@@ -36,12 +38,14 @@ model MembershipPlan {
 }
 
 model Member {
-  id        String    @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String
-  phone     String?
-  status    String    @default("active")
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String?
+  status      String    @default("active")
+  image       String?   // ImageKit URL
+  imageFileId String?   // ImageKit file ID for deletion
   
   gym       Gym    @relation(fields: [gymId], references: [id])
   gymId     String
@@ -71,51 +75,62 @@ model Payment {
 }
 
 model Instructor {
-  id        String   @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String
-  image     String?
-  gym       Gym      @relation(fields: [gymId], references: [id])
-  gymId     String
-  classes   Class[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  image       String?  // ImageKit URL
+  imageFileId String?  // ImageKit file ID for deletion
+  gym         Gym      @relation(fields: [gymId], references: [id])
+  gymId       String
+  classes     Class[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@unique([email, gymId])
 }
 
 model Class {
-  id           String     @id @default(cuid())
-  name         String
-  description  String?
-  startTime    DateTime
-  endTime      DateTime
-  capacity     Int        @default(20)
-  gym          Gym        @relation(fields: [gymId], references: [id])
-  gymId        String
-  instructor   Instructor @relation(fields: [instructorId], references: [id])
-  instructorId String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id                String     @id @default(cuid())
+  name              String
+  description       String?
+  startTime         DateTime
+  endTime           DateTime
+  capacity          Int        @default(20)
+  gym               Gym        @relation(fields: [gymId], references: [id])
+  gymId             String
+  instructor        Instructor @relation(fields: [instructorId], references: [id])
+  instructorId      String
+  
+  // Recurrence fields
+  isRecurring       Boolean    @default(false)
+  recurrencePattern String?    // "daily", "weekly", "custom"
+  recurrenceDays    String?    // JSON string of days: ["Monday", "Wednesday"]
+  recurrenceEndDate DateTime?  // When to stop creating instances
+  parentClassId     String?    // Link to parent recurring class
+  
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 }
 
 // User, Account, Session, and VerificationToken models remain the same
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  firstName     String
-  lastName      String
-  gym           Gym       @relation(fields: [gymId], references: [id])
-  gymId         String
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                        String                     @id @default(cuid())
+  name                      String?
+  email                     String                     @unique
+  emailVerified             DateTime?
+  image                     String?                    // ImageKit URL
+  imageFileId               String?                    // ImageKit file ID for deletion
+  password                  String?
+  firstName                 String
+  lastName                  String
+  gym                       Gym                        @relation(fields: [gymId], references: [id])
+  gymId                     String
+  accounts                  Account[]
+  sessions                  Session[]
+  emailChangeVerifications  EmailChangeVerification[]
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
 }
 
 model Account {
@@ -150,4 +165,15 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model EmailChangeVerification {
+  id       String   @id @default(cuid())
+  userId   String
+  newEmail String
+  token    String   @unique
+  expires  DateTime
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

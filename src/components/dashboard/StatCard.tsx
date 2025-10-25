@@ -22,17 +22,17 @@ export default function StatCard({
   Icon,
 }: StatCardProps) {
   return (
-    <div className="rounded-2xl p-6 border border-border bg-card shadow-sm flex flex-col gap-3 min-h-[160px]">
+    <div className="rounded-2xl p-4 sm:p-6 border border-border bg-card shadow-sm flex flex-col gap-3 min-h-[140px] sm:min-h-[160px]">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide uppercase">
+        <h3 className="text-xs sm:text-sm font-semibold text-muted-foreground tracking-wide uppercase">
           {title}
         </h3>
-        <span className="text-primary bg-primary/10 rounded-lg p-2">
-          <Icon size={22} />
+        <span className="text-primary bg-primary/10 rounded-lg p-1.5 sm:p-2">
+          <Icon size={20} className="sm:w-[22px] sm:h-[22px]" />
         </span>
       </div>
       <div className="mb-1">
-        <p className="text-3xl font-bold text-foreground leading-tight">
+        <p className="text-2xl sm:text-3xl font-bold text-foreground leading-tight">
           {value}
         </p>
       </div>

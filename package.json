@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:migrate": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma migrate dev",
+    "prisma:generate": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma generate",
+    "prisma:studio": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma studio",
+    "prisma:push": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma db push"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -15,17 +19,23 @@
     "@tanstack/react-table": "^8.21.3",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
+    "i18next": "^25.5.3",
+    "imagekit": "^6.0.0",
     "lucide-react": "^0.544.0",
     "next": "^15.5.4",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-datepicker": "^8.8.0",
+    "react-dom": "^19.2.0",
+    "react-i18next": "^16.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "^24.6.2",
     "@types/react": "^19.2.0",
+    "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^19.2.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.36.0",

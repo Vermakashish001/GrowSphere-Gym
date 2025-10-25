@@ -1,18 +1,28 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "@/assets/logo/logo.png";
 import ThemeToggle from "@/components/ThemeToggle";
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (searchParams.get("registered") === "true") {
+      setSuccessMessage("Account created successfully! Please sign in.");
+    }
+  }, [searchParams]);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,28 +55,35 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4 sm:p-6">
       {/* Theme Toggle - Fixed Position */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
         <ThemeToggle />
       </div>
 
       <div className="w-full max-w-md">
         {/* Card */}
-        <div className="bg-card border border-border rounded-2xl p-8 shadow-2xl">
+        <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-2xl">
           {/* Logo & Title */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <span className="text-4xl">🏋️</span>
-              <h1 className="text-2xl font-bold text-foreground">GrowSphere</h1>
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <Image src={logo} alt="GrowSphere Logo" width={40} height={40} className="object-contain" />
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">GrowSphere</h1>
             </div>
-            <h2 className="text-3xl font-bold text-foreground mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
               Welcome back
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Sign in to manage your gym operations
             </p>
           </div>
+
+          {/* Success Message */}
+          {successMessage && (
+            <div className="mb-6 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+              <p className="text-sm text-green-800 dark:text-green-400">{successMessage}</p>
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (
@@ -228,5 +245,17 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

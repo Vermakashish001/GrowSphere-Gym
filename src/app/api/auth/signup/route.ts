@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { prisma } from '@/lib/prisma';
+import { sendWelcomeEmail } from '@/lib/email';
 import { Prisma } from '@prisma/client';
 
 /**
@@ -63,6 +64,27 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Create default membership plans for the gym
+      await tx.membershipPlan.createMany({
+        data: [
+          {
+            name: "Basic",
+            price: 29.99,
+            gymId: gym.id,
+          },
+          {
+            name: "Premium",
+            price: 49.99,
+            gymId: gym.id,
+          },
+          {
+            name: "Elite",
+            price: 79.99,
+            gymId: gym.id,
+          },
+        ],
+      });
+
       // Create the user (gym owner) linked to the gym
       const user = await tx.user.create({
         data: {
@@ -91,6 +113,11 @@ export async function POST(request: NextRequest) {
       });
 
       return { user, gym };
+    });
+
+    // Send welcome email (don't await to avoid delaying response)
+    sendWelcomeEmail(email, firstName, gymName).catch((error) => {
+      console.error("Failed to send welcome email:", error);
     });
 
     // Return success response

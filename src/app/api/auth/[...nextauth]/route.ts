@@ -62,6 +62,7 @@ export const authOptions: NextAuthOptions = {
           name: `${user.firstName} ${user.lastName}`,
           firstName: user.firstName,
           lastName: user.lastName,
+          image: user.image,
           gymId: user.gymId,
           gymName: user.gym.name,
         };
@@ -77,14 +78,31 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     // Include additional user data in the JWT token
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
+        token.image = user.image;
         token.gymId = user.gymId;
         token.gymName = user.gymName;
       }
+      
+      // Update token when session is updated (e.g., profile image change)
+      if (trigger === "update" && session) {
+        // Fetch fresh user data from database
+        const freshUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { image: true, firstName: true, lastName: true },
+        });
+        
+        if (freshUser) {
+          token.image = freshUser.image;
+          token.firstName = freshUser.firstName;
+          token.lastName = freshUser.lastName;
+        }
+      }
+      
       return token;
     },
     // Include additional user data in the session
@@ -93,6 +111,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.firstName = token.firstName as string;
         session.user.lastName = token.lastName as string;
+        session.user.image = token.image as string | null;
         session.user.gymId = token.gymId as string;
         session.user.gymName = token.gymName as string;
       }
