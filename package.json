@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "prisma:migrate": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma migrate dev",
     "prisma:generate": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma generate",
     "prisma:studio": "NODE_TLS_REJECT_UNAUTHORIZED=0 prisma studio",
