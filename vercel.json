@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "installCommand": "bash install-batches.sh",
+  "installCommand": "npm install",
   "buildCommand": "prisma generate && next build"
 }
