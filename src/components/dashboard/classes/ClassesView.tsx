@@ -16,10 +16,12 @@ import {
   ChevronRight,
   Edit,
   Trash2,
+  UserPlus,
 } from "lucide-react";
 import Link from "next/link";
 import { updateClass, deleteClass } from "@/lib/actions";
 import PageHeader from "@/components/dashboard/PageHeader";
+import InstructorForm from "@/components/dashboard/settings/InstructorForm";
 
 type ClassWithInstructor = Class & {
   instructor: Instructor;
@@ -40,6 +42,7 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
   const [searchQuery, setSearchQuery] = useState("");
   const [editingClass, setEditingClass] = useState<ClassWithInstructor | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showInstructorForm, setShowInstructorForm] = useState(false);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -208,26 +211,49 @@ export default function ClassesView({ classes, instructors }: ClassesViewProps) 
         title="Classes"
         description="Manage your class schedule and instructors"
         action={
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                placeholder="Search classes..."
-                value={searchQuery}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10 pr-4 py-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3 sm:ml-auto">
+          {/* Search Bar */}
+          <div className="relative  w-2/3 sm:w-64">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              placeholder="Search classes..."
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="pl-10 pr-4 py-2.5 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
+            />
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="flex gap-2 w-1/2 sm:w-auto">
+            <button
+              onClick={() => setShowInstructorForm(!showInstructorForm)}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-secondary hover:bg-secondary/80 text-foreground rounded-lg text-sm font-medium transition-colors"
+              title="Add Instructor"
+            >
+              <UserPlus className="h-5 w-5" />
+              <span className="hidden sm:inline">Instructor</span>
+            </button>
             <Link
               href="/dashboard/classes/new"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors shadow-lg shadow-primary/20"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors shadow-lg shadow-primary/20"
             >
               <Plus className="h-5 w-5" />
               <span className="hidden sm:inline">New Class</span>
             </Link>
           </div>
+        </div>
         }
       />
+
+      {/* Instructor Form */}
+      {showInstructorForm && (
+        <div className="animate-in slide-in-from-top-5 fade-in duration-200">
+          <InstructorForm 
+            defaultOpen={true}
+            onCancel={() => setShowInstructorForm(false)}
+          />
+        </div>
+      )}
 
       {/* Filters and View Toggle */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">

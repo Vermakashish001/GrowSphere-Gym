@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { User, Mail, Calendar, Building2, Lock, Loader2, CheckCircle2 } from "lucide-react";
+import { User, Mail, Calendar, Building2, Lock, Loader2 } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import PageHeader from "@/components/dashboard/PageHeader";
+import Toast from "@/components/Toast";
 
 interface ProfileUser {
   id: string;
@@ -186,18 +187,13 @@ export default function ProfileView({ user }: ProfileViewProps) {
         description="Manage your account settings and preferences"
       />
 
-      {/* Success/Error Message */}
+      {/* Toast Notification */}
       {message && (
-        <div
-          className={`flex items-center gap-3 p-4 rounded-xl border ${
-            message.type === "success"
-              ? "bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400"
-              : "bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400"
-          }`}
-        >
-          <CheckCircle2 className="w-5 h-5 shrink-0" />
-          <p className="text-sm font-medium">{message.text}</p>
-        </div>
+        <Toast
+          type={message.type}
+          message={message.text}
+          onClose={() => setMessage(null)}
+        />
       )}
 
       {/* Profile Info Card */}

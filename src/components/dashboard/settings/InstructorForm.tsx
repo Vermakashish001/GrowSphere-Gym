@@ -2,33 +2,62 @@
 
 import { useState } from "react";
 import { addInstructor } from "@/lib/actions";
-import { User, Mail, Image as ImageIcon, AlertCircle, Check } from "lucide-react";
+import { User, Mail } from "lucide-react";
+import Toast from "@/components/Toast";
+import ImageUpload from "@/components/ImageUpload";
 
-export default function InstructorForm() {
+interface InstructorFormProps {
+  defaultOpen?: boolean;
+  onCancel?: () => void;
+}
+
+export default function InstructorForm({ defaultOpen = false, onCancel }: InstructorFormProps = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageFileId, setImageFileId] = useState<string>("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("");
-    setSuccess(false);
+    setMessage(null);
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData();
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      
+      // Add image data if available
+      if (imageUrl) {
+        formData.append("image", imageUrl);
+      }
+      if (imageFileId) {
+        formData.append("imageFileId", imageFileId);
+      }
+      
       await addInstructor(formData);
-      setSuccess(true);
-      e.currentTarget.reset();
+      setMessage({ type: "success", text: "Instructor added successfully!" });
+      
+      // Clear form fields
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setImageUrl("");
+      setImageFileId("");
       
       // Close form after 2 seconds
       setTimeout(() => {
         setIsOpen(false);
-        setSuccess(false);
+        setMessage(null);
+        if (onCancel) onCancel();
       }, 2000);
     } catch (err: any) {
-      setError(err.message || "Failed to add instructor");
+      setMessage({ type: "error", text: err.message || "Failed to add instructor" });
     } finally {
       setIsSubmitting(false);
     }
@@ -52,8 +81,13 @@ export default function InstructorForm() {
         <button
           onClick={() => {
             setIsOpen(false);
-            setError("");
-            setSuccess(false);
+            setMessage(null);
+            setFirstName("");
+            setLastName("");
+            setEmail("");
+            setImageUrl("");
+            setImageFileId("");
+            if (onCancel) onCancel();
           }}
           className="text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -61,20 +95,12 @@ export default function InstructorForm() {
         </button>
       </div>
 
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 flex items-center gap-3 mb-4">
-          <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 flex items-center gap-3 mb-4">
-          <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-          <p className="text-sm text-green-600 dark:text-green-400">
-            Instructor added successfully!
-          </p>
-        </div>
+      {message && (
+        <Toast
+          type={message.type}
+          message={message.text}
+          onClose={() => setMessage(null)}
+        />
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,6 +114,8 @@ export default function InstructorForm() {
             <input
               type="text"
               name="firstName"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               required
               placeholder="Enter first name"
               className="w-full pl-11 pr-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
@@ -105,6 +133,8 @@ export default function InstructorForm() {
             <input
               type="text"
               name="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               required
               placeholder="Enter last name"
               className="w-full pl-11 pr-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
@@ -122,6 +152,8 @@ export default function InstructorForm() {
             <input
               type="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="instructor@example.com"
               className="w-full pl-11 pr-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
@@ -129,20 +161,20 @@ export default function InstructorForm() {
           </div>
         </div>
 
-        {/* Image URL (Optional) */}
+        {/* Profile Image Upload (Optional) */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-2">
-            Profile Image URL (Optional)
+            Profile Image (Optional)
           </label>
-          <div className="relative">
-            <ImageIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <input
-              type="url"
-              name="image"
-              placeholder="https://example.com/image.jpg"
-              className="w-full pl-11 pr-4 py-2.5 bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-            />
-          </div>
+          <ImageUpload
+            onUploadSuccess={(url, fileId) => {
+              setImageUrl(url);
+              setImageFileId(fileId);
+            }}
+            currentImage={imageUrl || undefined}
+            folder="/instructors"
+            maxSize={5}
+          />
         </div>
 
         {/* Submit Buttons */}
@@ -151,8 +183,13 @@ export default function InstructorForm() {
             type="button"
             onClick={() => {
               setIsOpen(false);
-              setError("");
-              setSuccess(false);
+              setMessage(null);
+              setFirstName("");
+              setLastName("");
+              setEmail("");
+              setImageUrl("");
+              setImageFileId("");
+              if (onCancel) onCancel();
             }}
             className="flex-1 px-4 py-2 bg-secondary/50 hover:bg-secondary rounded-lg text-sm font-medium transition-colors"
           >

@@ -225,10 +225,23 @@ export async function addInstructor(formData: FormData) {
   const lastName = formData.get("lastName") as string;
   const email = formData.get("email") as string;
   const image = formData.get("image") as string;
+  const imageFileId = formData.get("imageFileId") as string;
   
   // Basic validation
   if (!firstName || !lastName || !email) {
     throw new Error("Missing required fields");
+  }
+
+  // Check if instructor with this email already exists for this gym
+  const existingInstructor = await prisma.instructor.findFirst({
+    where: {
+      email,
+      gymId: session.user.gymId,
+    },
+  });
+
+  if (existingInstructor) {
+    throw new Error("An instructor with this email already exists in your gym");
   }
 
   await prisma.instructor.create({
@@ -237,12 +250,14 @@ export async function addInstructor(formData: FormData) {
       lastName,
       email,
       image: image || null,
+      imageFileId: imageFileId || null,
       gymId: session.user.gymId,
     },
   });
 
-  // Revalidate the settings page to show the new instructor
+  // Revalidate pages to show the new instructor
   revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard/classes");
   // Return success (can be used in the form)
   return { success: true };
 }

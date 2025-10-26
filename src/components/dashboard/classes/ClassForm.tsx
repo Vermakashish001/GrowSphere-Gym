@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { Instructor } from "@prisma/client";
 import { addClass } from "@/lib/actions";
-import { Calendar, Clock, Users, User, FileText, AlertCircle, Repeat } from "lucide-react";
+import { Calendar, Clock, Users, User, FileText, Repeat, AlertCircle } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Toast from "@/components/Toast";
 
 interface ClassFormProps {
   instructors: Instructor[];
@@ -13,7 +14,7 @@ interface ClassFormProps {
 
 export default function ClassForm({ instructors }: ClassFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isRecurring, setIsRecurring] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   
@@ -31,14 +32,14 @@ export default function ClassForm({ instructors }: ClassFormProps) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("");
+    setMessage(null);
 
     try {
       const formData = new FormData(e.currentTarget);
       
       // Validate that endTime is after startTime
       if (endDateTime <= startDateTime) {
-        setError("End time must be after start time");
+        setMessage({ type: "error", text: "End time must be after start time" });
         setIsSubmitting(false);
         return;
       }
@@ -55,7 +56,7 @@ export default function ClassForm({ instructors }: ClassFormProps) {
 
       await addClass(formData);
     } catch (err: any) {
-      setError(err.message || "Failed to create class");
+      setMessage({ type: "error", text: err.message || "Failed to create class" });
       setIsSubmitting(false);
     }
   };
@@ -67,11 +68,12 @@ export default function ClassForm({ instructors }: ClassFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-3">
-          <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 flex-shrink-0" />
-          <p className="text-xs sm:text-sm text-red-600 dark:text-red-400">{error}</p>
-        </div>
+      {message && (
+        <Toast
+          type={message.type}
+          message={message.text}
+          onClose={() => setMessage(null)}
+        />
       )}
 
       {/* Class Information */}

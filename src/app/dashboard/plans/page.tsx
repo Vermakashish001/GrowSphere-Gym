@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, DollarSign, Users, Loader2, Tag, CreditCard } from "lucide-react";
 import PageHeader from "@/components/dashboard/PageHeader";
+import Toast from "@/components/Toast";
 
 interface MembershipPlan {
   id: string;
@@ -149,15 +150,11 @@ export default function MembershipPlansPage() {
       />
 
       {message && (
-        <div
-          className={`mb-4 p-4 rounded-lg ${
-            message.type === "success"
-              ? "bg-green-50 text-green-800 border border-green-200"
-              : "bg-red-50 text-red-800 border border-red-200"
-          }`}
-        >
-          {message.text}
-        </div>
+        <Toast
+          type={message.type}
+          message={message.text}
+          onClose={() => setMessage(null)}
+        />
       )}
 
       {showForm && (
